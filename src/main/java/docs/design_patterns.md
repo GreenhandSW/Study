@@ -68,9 +68,17 @@ public class Factory {
 }
 ```
 
+实例：
+
+Kafka3.6目前支持的[SASL](https://docs.oracle.com/cd/E26926_01/html/E25912/sasl.intro.20.html)验证方式有三种，分别是Plain、Scram和OAuth，具体区别见[Apache zookeeper kafka 开启SASL安全认证](https://blog.csdn.net/qq_34777982/article/details/132451162)。SASL服务器负责接收客户端提交的验证请求并执行后续验证流程。
+
+SASL服务器的主要方法在`SaslServer`接口中声明，其实现类有`PlainSaslServer`、`ScramSaslServer`、`OAuthBearerSaslServer`三个，分别对应三种验证方法。然后有一个工厂接口`SaslServerFactory`用于获取一个`SaslServer`实例，该工厂也有三个具体的实现类`PlainSaslServerFactory`、`ScramSaslServerFactory`、`OAuthBearerSaslServerFactory`分别在实现方法中返回对应的`SaslServer`实例。
+
+
+
 # 抽象工厂模式(Abstract Factory)
 
-场景：需要创建A、B产品和X、Y产品，其中AB属于一个系列，XY属于一个系列。A和X相关，B和Y相关。（比如Java虚拟机有Win虚拟机和Linux虚拟机，OS有Win和Linux，现在需要获取Java虚拟机以及其运行系统，则需要创建抽象工厂类，包含获取虚拟机和OS两个方法。WinJavaFactory实现该类，获取Win系统和Win虚拟机，LinuxJavaFactory实现该类，获取Linux系统和Linux虚拟机）
+场景：需要创建A、B产品和X、Y产品，其中AB属于一个系列，X、Y属于一个系列。A和X相关，B和Y相关。（比如Java虚拟机有Win虚拟机和Linux虚拟机，OS有Win和Linux，现在需要获取Java虚拟机以及其运行系统，则需要创建抽象工厂类，包含获取虚拟机和OS两个方法。`WinJavaFactory`实现该类，获取Win系统和Win虚拟机，`LinuxJavaFactory`实现该类，获取Linux系统和Linux虚拟机）
 
 方案：
 1. 创建各系列产品对应的接口
@@ -281,6 +289,8 @@ public class Builder {
 }
 ```
 
+
+
 # 原型模式(Prototype)
 
 场景：创建对象副本，但并非从头开始构建，而是使用对象的当前信息直接复制。
@@ -405,7 +415,7 @@ public static Singleton getInstance(){
     return instance;
 }
 ```
-3. 懒汉式：静态内部类(静态内部类只有在使用的时候彩绘被加载，因此也是懒汉式)
+3. 懒汉式：静态内部类(静态内部类只有在使用的时候才会被加载，因此也是懒汉式)
 ```java
 public static class SingletonInstance{
     private static final Singleton singleton = new Singleton();
@@ -1265,7 +1275,7 @@ public class ObserverPattern {
 }
 ```
 
-# 状态模式
+# 状态模式(State)
 
 场景：对象包含多个状态，每种状态下的各种操作的行为都不相同。
 
@@ -1407,7 +1417,7 @@ public class Strategy {
 实例：
 RocketMQ负载均衡的时候，会有平均分配、环状平均分配、按机房位置分配等等多种分配算法。因此在负载均衡类`RebalanceImpl`里有一个对抽象分配算法`AllocateMessageQueueStrategy`的引用，并调用`strategy.allocate()`方法获取分配结果。而具体的各种分配算法实现抽象分配算法接口，在各自的`allocate()`内部实现其具体分配逻辑。
 
-# 访问者模式
+# 访问者模式(Visitor)
 
 场景：对象中的元素需要进行不同的操作
 
