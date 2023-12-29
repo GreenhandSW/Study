@@ -425,13 +425,27 @@ public static Singleton getInstance(){
 }
 ```
 4. 饿汉式：静态常量或者静态代码块
-```java
-private static Singleton instance=new Singleton();
-public static Singleton getInstance(){
-    return instance;
-}
-```
+
+   ```java
+   private static Singleton instance=new Singleton();
+   public static Singleton getInstance(){
+       return instance;
+   }
+   ```
+
+   1. 举例：spring aop包里，对于目标源`TargetSource`接口最简单的一个实现是静态目标源`EmptyTargetSource`，当不存在目标实例、甚至不存在目标类时使用这个类的实例[^2]。为了确保不会大量生成这个没什么用只是作为一个标记的实例，使用了单例模式，同时将其作为一个静态变量，也就是饿汉式，在启动时即加载之：
+
+      ```java
+      public final class EmptyTargetSource implements TargetSource, Serializable {
+      	/**
+      	 * The canonical (Singleton) instance of this {@link EmptyTargetSource}.
+      	 */
+      	public static final EmptyTargetSource INSTANCE = new EmptyTargetSource(null, true);
+      }
+      ```
+
 5. 枚举：
+
 ```java
 public static enum Singleton{
     INSTANCE;
@@ -1489,4 +1503,8 @@ public class Visitor {
 ```
 
 # 参考资料
+
 [^1]: [23种设计模式](https://zhuanlan.zhihu.com/p/651451595)
+
+[^2]: [Spring框架之AOP源码完全解析 ](https://www.cnblogs.com/xxkj/p/14094203.html)
+
